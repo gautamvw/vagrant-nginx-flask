@@ -1,0 +1,34 @@
+server {
+    listen 80;
+    listen [::]:80;
+    #return 301 http://localhost:5000;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+    location /static {
+        alias  /home/www/flask_project/static/;
+    }
+}
+
+#server {
+#}
+
+server {
+    listen 443 ssl http2;
+
+    # redirects www to non-www. wasn't work for me without this server block
+    return 301 $scheme://localhost$request_uri;
+}
+
+server {
+
+    ## SSL settings
+
+    listen 443 ssl http2 default_server;
+    listen [::]:443 ssl http2 default_server;
+
+    # other vhost configuration
+}
